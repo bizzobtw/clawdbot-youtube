@@ -1,5 +1,3 @@
-// types/storyboard.ts
-
 export interface Scene {
   scene_number: number;
   narration_text: string;
@@ -18,7 +16,7 @@ export interface Storyboard {
   style: string;
   target_duration_seconds: number;
   total_estimated_duration: number;
-  character_bible: string;       // Ryker Method — locked visual style for all scenes
+  character_bible: string;
   scenes: Scene[];
   created_at: string;
 }
@@ -32,22 +30,14 @@ export interface PublishResult {
 
 export interface PipelineJob {
   job_id: string;
-  source_brief_id?: string;     // set if this is a Scout remake job
-  status:
-    | 'queued'
-    | 'writing'
-    | 'narrating'
-    | 'rendering'
-    | 'assembling'
-    | 'publishing'
-    | 'done'
-    | 'error';
+  source_brief_id?: string;
+  status: 'queued' | 'writing' | 'narrating' | 'rendering' | 'assembling' | 'publishing' | 'done' | 'error';
   request: {
     topic: string;
     duration_minutes: number;
     style: string;
     channel_name?: string;
-  raw_script?: string; raw_script?: string;
+    raw_script?: string;
   };
   storyboard?: Storyboard;
   voiceover_path?: string;
