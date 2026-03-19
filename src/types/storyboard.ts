@@ -46,7 +46,7 @@ export interface PipelineJob {
     topic: string;
     duration_minutes: number;
     style: string;
-    channel_name?: string;
+    channel_name?: string; raw_script?: string;
   };
   storyboard?: Storyboard;
   voiceover_path?: string;
