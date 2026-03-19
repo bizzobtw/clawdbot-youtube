@@ -51,7 +51,7 @@ export async function runVideoPipeline(request: {
       topic: request.topic,
       duration_minutes: request.duration_minutes,
       style: request.style,
-      raw_script: request.raw_script,
+      // raw_script: request.raw_script,
       research,
     });
 
@@ -110,7 +110,7 @@ export async function runRemakeWorkflow(brief: RemakeBrief, options: {
       topic: brief.suggested_title,
       duration_minutes: brief.target_duration_minutes,
       style: brief.suggested_style,
-      raw_script: buildRemakePrompt(brief),
+      // raw_script: buildRemakePrompt(brief),
     });
 
     job.storyboard = storyboard;
