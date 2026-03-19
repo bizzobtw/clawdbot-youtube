@@ -8,7 +8,6 @@ export interface Scene {
   image_path?: string;
   style_tags: string[];
 }
-
 export interface Storyboard {
   video_id: string;
   title: string;
@@ -20,14 +19,12 @@ export interface Storyboard {
   scenes: Scene[];
   created_at: string;
 }
-
 export interface PublishResult {
   video_id: string;
   video_url: string;
   title: string;
   published_at: string;
 }
-
 export interface PipelineJob {
   job_id: string;
   source_brief_id?: string;
@@ -48,7 +45,6 @@ export interface PipelineJob {
   started_at: string;
   completed_at?: string;
 }
-
 export interface ResearchReport {
   topic: string;
   trending_angles: string[];
