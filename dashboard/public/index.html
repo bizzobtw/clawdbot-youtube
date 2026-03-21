@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ClawdBot Dashboard</title>
+<script src="/socket.io/socket.io.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0a0f; color:#e2e8f0; font-family:monospace; padding:20px; }
+h1 { color:#63ffc8; margin-bottom:20px; font-size:24px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.panel { background:#0d1117; border:1px solid rgba(255,255,255,0.07); padding:16px; }
+.panel h2 { font-size:12px; color:#64748b; letter-spacing:0.1em; margin-bottom:12px; text-transform:uppercase; }
+.msg { padding:8px; border-left:2px solid #63ffc8; margin-bottom:8px; font-size:11px; background:#131920; }
+.msg .sender { color:#63ffc8; margin-bottom:2px; }
+.cost-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:11px; }
+#status { color:#63ffc8; font-size:11px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+<h1>⬡ CLAWDBOT MISSION CONTROL</h1>
+<div id="status">● Connecting...</div>
+<div class="grid">
+  <div class="panel">
+    <h2>Live Messages</h2>
+    <div id="messages"></div>
+  </div>
+  <div class="panel">
+    <h2>Cost Tracker</h2>
+    <div id="costs"></div>
+  </div>
+  <div class="panel">
+    <h2>Task Queue</h2>
+    <div id="tasks"></div>
+  </div>
+  <div class="panel">
+    <h2>Alerts</h2>
+    <div id="alerts"></div>
+  </div>
+</div>
+<script>
+const socket = io();
+socket.on('connect', () => document.getElementById('status').textContent = '● Live');
+fetch('/api/state').then(r=>r.json()).then(state => {
+  state.messages?.forEach(m => addMessage(m));
+  Object.entries(state.costs||{}).forEach(([k,v]) => addCost(k,v));
+  state.tasks?.forEach(t => addTask(t));
+});
+socket.on('dashboard:messages', addMessage);
+socket.on('dashboard:costs', d => addCost(d.service, d.amount));
+socket.on('dashboard:tasks', addTask);
+socket.on('dashboard:alerts', d => {
+  const el = document.getElementById('alerts');
+  el.innerHTML = `<div class="msg"><div class="sender" style="color:#ff6b6b">ALERT</div>${d.message}</div>` + el.innerHTML;
+});
+function addMessage(m) {
+  const el = document.getElementById('messages');
+  el.innerHTML = `<div class="msg"><div class="sender">${m.from||'system'} → ${m.to||'all'}</div>${m.text}</div>` + el.innerHTML;
+}
+function addCost(service, amount) {
+  let el = document.getElementById('cost-'+service);
+  if (!el) {
+    document.getElementById('costs').innerHTML += `<div class="cost-row"><span>${service}</span><span id="cost-${service}" style="color:#63ffc8">$${amount}</span></div>`;
+  } else { el.textContent = '$'+amount; }
+}
+function addTask(t) {
+  const el = document.getElementById('tasks');
+  el.innerHTML = `<div class="msg"><div class="sender">${t.assignedTo||'pipeline'}</div>${t.name}</div>` + el.innerHTML;
+}
+</script>
+</body>
+</html>
