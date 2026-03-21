@@ -191,3 +191,21 @@ function splitForDiscord(text: string, maxLen: number): string[] {
   }
   return chunks;
 }
+
+// Start Discord bot
+import { Client, GatewayIntentBits, Events } from 'discord.js';
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+  if (interaction.commandName === 'makevideo') await makeVideoCommand.execute(interaction);
+  if (interaction.commandName === 'research') await researchCommand.execute(interaction);
+  if (interaction.commandName === 'watchvideo') await watchVideoCommand.execute(interaction);
+  if (interaction.commandName === 'scoutstatus') await scoutStatusCommand.execute(interaction);
+});
+
+client.once(Events.ClientReady, () => {
+  console.log(`[Discord] Logged in as ${client.user?.tag}`);
+});
+
+client.login(process.env.DISCORD_BOT_TOKEN);
